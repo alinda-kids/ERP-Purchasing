@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 // CONFIG — ใส่ API Key ใหม่ที่ Gen แล้วตรงนี้
 // ============================================================
 const SHEET_ID = "1blB8MYJG8xpHeP3Nqn32rfpP7OIsmMlpKZw9ZLOsCSY";
-const API_KEY  = "YOUR_NEW_API_KEY_HERE"; // ← ใส่ API Key ใหม่ที่ Gen แล้วตรงนี้
+const API_KEY  = "AIzaSyA5AXEVz7IFgymb30bsPlyPu9QvPitha_w"; // ← ใส่ API Key ใหม่ที่ Gen แล้วตรงนี้
 
 const TABS = {
   Taobao: "Taobao",
