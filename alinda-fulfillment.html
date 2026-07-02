@@ -7,316 +7,695 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter','Helvetica Neue',sans-serif; background: #F0F2F5; min-height: 100vh; }
+
 .header { background: #D0011B; padding: 0 20px; height: 54px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(208,1,27,0.3); }
-.header-logo { color: #fff; font-weight: 900; font-size: 16px; }
-.header-sep { color: rgba(255,255,255,0.4); }
-.header-title { color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600; }
-.header-spacer { flex: 1; }
-.header-sync { color: rgba(255,255,255,0.6); font-size: 11px; }
-.btn-refresh { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
-.tabs { background: #fff; border-bottom: 1px solid #E8EAED; padding: 0 20px; display: flex; gap: 4px; }
-.tab { padding: 12px 18px; border: none; background: none; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; color: #6B7280; white-space: nowrap; }
-.tab.active { color: #D0011B; border-bottom-color: #D0011B; }
-.tab-badge { background: #D0011B; color: #fff; border-radius: 10px; padding: 1px 7px; font-size: 10px; margin-left: 5px; }
-.tab-badge.green { background: #10B981; }
-.content { padding: 16px 20px; max-width: 1200px; margin: 0 auto; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap: 12px; margin-bottom: 20px; }
-.stat { background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #E8EAED; }
-.stat-label { font-size: 11px; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
-.stat-value { font-size: 22px; font-weight: 800; color: #111827; }
-.stat-sub { font-size: 11px; color: #9CA3AF; margin-top: 3px; }
-.search-bar { display: flex; gap: 8px; margin-bottom: 14px; }
-.search-input { flex: 1; padding: 9px 14px; border: 1px solid #E8EAED; border-radius: 10px; font-size: 13px; outline: none; }
-.search-input:focus { border-color: #D0011B; }
-.orders { display: flex; flex-direction: column; gap: 10px; }
-.order-card { background: #fff; border-radius: 14px; border: 1px solid #E8EAED; overflow: hidden; transition: box-shadow 0.15s; }
-.order-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-.order-card.urgent { border-left: 4px solid #EF4444; }
-.order-card.normal { border-left: 4px solid #D0011B; }
-.order-card.packed-card { border-left: 4px solid #10B981; opacity: 0.75; }
-.order-top { padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
-.order-icon { width: 42px; height: 42px; background: #FFF1F1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-.order-main { flex: 1; min-width: 0; }
-.order-id { font-size: 12px; font-weight: 800; color: #D0011B; font-family: monospace; margin-bottom: 3px; }
-.order-product { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 5px; }
-.order-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.meta-item { font-size: 12px; color: #6B7280; }
-.meta-item strong { color: #374151; }
-.order-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
-.order-price { font-size: 20px; font-weight: 800; color: #D0011B; }
-.profit-val { font-size: 13px; font-weight: 700; }
-.profit-pos { color: #10B981; }
-.profit-neg { color: #EF4444; }
-.dl-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
-.dl-urgent { background: #FEE2E2; color: #DC2626; }
-.dl-soon { background: #FEF3C7; color: #D97706; }
-.dl-ok { background: #D1FAE5; color: #065F46; }
-.match-badge { background: #EEF2FF; color: #4338CA; padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; margin-left: 6px; }
-.unmatched-badge { background: #FEF3C7; color: #D97706; padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; margin-left: 6px; }
-.section-pad { padding: 0 16px 10px; }
-.vr-box { border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
-.vr-arrived { background: #D1FAE5; }
-.vr-transit { background: #FEF3C7; }
-.vr-unknown { background: #F3F4F6; }
-.vr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.vr-dot-green { background: #10B981; }
-.vr-dot-yellow { background: #F59E0B; }
-.vr-dot-gray { background: #9CA3AF; }
-.vr-text { flex: 1; }
-.vr-text strong { display: block; font-weight: 700; color: #111827; }
-.vr-text span { color: #6B7280; }
-.btn-vr { background: #fff; border: 1px solid #D0011B; color: #D0011B; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
-.cost-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; background: #F9FAFB; border-radius: 10px; padding: 10px 14px; font-size: 12px; }
-.ci-label { color: #9CA3AF; font-weight: 600; margin-bottom: 2px; }
-.ci-val { font-weight: 700; color: #111827; }
-.order-actions { padding: 10px 16px; border-top: 1px solid #F3F4F6; display: flex; gap: 8px; align-items: center; }
-.btn-pack { background: #D0011B; color: #fff; border: none; padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
-.btn-pack:hover { background: #B0001A; }
-.btn-packed-done { background: #10B981; color: #fff; border: none; padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: default; }
-.btn-shopee { background: #FFF1F1; color: #D0011B; border: 1px solid #FCA5A5; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; }
-.btn-edit { background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-.packed-time { font-size: 11px; color: #10B981; font-weight: 600; margin-left: auto; }
-.lot-badge { background: #EEF2FF; color: #4338CA; padding: 1px 5px; border-radius: 4px; font-size: 10px; font-weight: 700; font-family: monospace; }
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-.modal-overlay.open { display: flex; }
-.modal { background: #fff; border-radius: 16px; padding: 24px; width: 90%; max-width: 480px; }
-.modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
-.mf { margin-bottom: 14px; }
-.mf label { display: block; font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 5px; }
-.mf input { width: 100%; padding: 9px 12px; border: 1px solid #E8EAED; border-radius: 8px; font-size: 13px; outline: none; }
-.mf input:focus { border-color: #D0011B; }
-.modal-btns { display: flex; gap: 8px; margin-top: 20px; }
-.modal-save { background: #D0011B; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; flex: 1; }
-.modal-cancel { background: #F3F4F6; color: #374151; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-.spinner { width: 40px; height: 40px; border: 3px solid #F3F4F6; border-top-color: #D0011B; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading { text-align: center; padding: 80px 20px; color: #9CA3AF; }
+.logo { color:#fff; font-weight:900; font-size:16px; }
+.sep { color:rgba(255,255,255,0.4); }
+.htitle { color:rgba(255,255,255,0.9); font-size:13px; font-weight:600; }
+.hspace { flex:1; }
+.hsync { color:rgba(255,255,255,0.6); font-size:11px; }
+.hbtn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600; }
+.hbtn:hover { background:rgba(255,255,255,0.25); }
+.hbtn.vr { background:rgba(255,255,255,0.25); }
+
+.vr-loading { background:#FEF3C7; color:#92400E; padding:10px 20px; font-size:12px; font-weight:600; text-align:center; display:none; }
+.vr-loading.show { display:block; }
+
+.tabs { background:#fff; border-bottom:1px solid #E8EAED; padding:0 20px; display:flex; gap:4px; }
+.tab { padding:12px 18px; border:none; background:none; font-size:13px; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; color:#6B7280; white-space:nowrap; }
+.tab.active { color:#D0011B; border-bottom-color:#D0011B; }
+.tbadge { border-radius:10px; padding:1px 7px; font-size:10px; margin-left:5px; color:#fff; }
+.tbadge.red { background:#D0011B; }
+.tbadge.purple { background:#8B5CF6; }
+.tbadge.green { background:#10B981; }
+.tbadge.yellow { background:#F59E0B; }
+
+.content { padding:16px 20px; max-width:1200px; margin:0 auto; }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-bottom:18px; }
+.stat { background:#fff; border-radius:12px; padding:14px 16px; border:1px solid #E8EAED; }
+.slabel { font-size:10px; color:#9CA3AF; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px; }
+.sval { font-size:20px; font-weight:800; color:#111827; }
+.ssub { font-size:11px; color:#9CA3AF; margin-top:2px; }
+
+.filters { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.sinput { flex:1; min-width:180px; padding:9px 14px; border:1px solid #E8EAED; border-radius:10px; font-size:13px; outline:none; }
+.sinput:focus { border-color:#D0011B; }
+
+.orders { display:flex; flex-direction:column; gap:10px; }
+
+.card { background:#fff; border-radius:14px; border:1px solid #E8EAED; overflow:hidden; transition:box-shadow 0.15s; }
+.card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+.card.urgent { border-left:4px solid #EF4444; }
+.card.normal { border-left:4px solid #D0011B; }
+.card.transit { border-left:4px solid #F59E0B; }
+.card.nostock { border-left:4px solid #8B5CF6; }
+.card.ready { border-left:4px solid #10B981; }
+.card.done { border-left:4px solid #10B981; opacity:0.7; }
+
+.ctop { padding:14px 16px; display:flex; align-items:flex-start; gap:12px; }
+.cicon { width:42px; height:42px; background:#FFF1F1; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.cmain { flex:1; min-width:0; }
+.cid { font-size:12px; font-weight:800; color:#D0011B; font-family:monospace; margin-bottom:3px; }
+.cprod { font-size:14px; font-weight:700; color:#111827; margin-bottom:5px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.cmeta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.mi { font-size:12px; color:#6B7280; }
+.mi strong { color:#374151; }
+.cright { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+.cprice { font-size:20px; font-weight:800; color:#D0011B; }
+.cprofit { font-size:13px; font-weight:700; }
+.pp { color:#10B981; } .pn { color:#EF4444; }
+
+.badge { padding:2px 7px; border-radius:5px; font-size:10px; font-weight:700; }
+.b-match { background:#EEF2FF; color:#4338CA; }
+.b-erp { background:#D1FAE5; color:#065F46; }
+.b-noerp { background:#FEF3C7; color:#D97706; }
+.b-nostock { background:#F3E8FF; color:#7C3AED; }
+
+.dl-badge { font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; white-space:nowrap; }
+.dl-u { background:#FEE2E2; color:#DC2626; }
+.dl-s { background:#FEF3C7; color:#D97706; }
+.dl-o { background:#D1FAE5; color:#065F46; }
+
+/* Status blocks */
+.sp { padding:0 16px 10px; }
+
+.status-box { border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:12px; }
+.sb-arrived { background:#D1FAE5; }
+.sb-transit { background:#FEF3C7; }
+.sb-nostock { background:#F3E8FF; }
+.sb-unknown { background:#F3F4F6; }
+.sb-bd { background:#EEF2FF; }
+
+.sdot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.sd-g { background:#10B981; } .sd-y { background:#F59E0B; }
+.sd-p { background:#8B5CF6; } .sd-gr { background:#9CA3AF; }
+.sd-b { background:#3B82F6; }
+
+.stext { flex:1; }
+.stext strong { display:block; font-weight:700; color:#111827; margin-bottom:1px; }
+.stext span { color:#6B7280; font-size:11px; }
+.stext .track { font-family:monospace; font-size:11px; color:#4338CA; background:#EEF2FF; padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px; }
+
+.sbtn { border:none; padding:5px 12px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; text-decoration:none; display:inline-block; }
+.sbtn-vr { background:#fff; border:1px solid #D0011B !important; color:#D0011B; }
+.sbtn-order { background:#F3E8FF; color:#7C3AED; border:1px solid #DDD6FE !important; }
+
+/* ERP match row */
+.erp-row { background:#F0FDF4; border-radius:10px; padding:8px 14px; display:flex; gap:16px; flex-wrap:wrap; font-size:11px; border:1px solid #BBF7D0; }
+.erp-col strong { display:block; font-size:10px; color:#059669; font-weight:700; margin-bottom:1px; }
+.erp-col span { color:#111827; font-weight:600; }
+.erp-col a { color:#D0011B; text-decoration:none; font-weight:700; }
+.erp-col a:hover { text-decoration:underline; }
+
+/* Cost grid */
+.cost-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; background:#F9FAFB; border-radius:10px; padding:10px 14px; font-size:12px; }
+.cg-label { color:#9CA3AF; font-weight:600; font-size:10px; margin-bottom:2px; }
+.cg-val { font-weight:700; color:#111827; }
+
+/* Actions */
+.cactions { padding:10px 16px; border-top:1px solid #F3F4F6; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.btn-pack { background:#D0011B; color:#fff; border:none; padding:9px 22px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; }
+.btn-pack:hover { background:#B0001A; }
+.btn-done { background:#10B981; color:#fff; border:none; padding:9px 22px; border-radius:8px; font-size:13px; font-weight:700; }
+.btn-shopee { background:#FFF1F1; color:#D0011B; border:1px solid #FCA5A5; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none; cursor:pointer; }
+.btn-edit { background:#EEF2FF; color:#4338CA; border:1px solid #C7D2FE; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; }
+.btn-reorder { background:#F3E8FF; color:#7C3AED; border:1px solid #DDD6FE; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none; cursor:pointer; }
+.packed-time { font-size:11px; color:#10B981; font-weight:600; margin-left:auto; }
+
+/* Modal */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; }
+.overlay.open { display:flex; }
+.modal { background:#fff; border-radius:16px; padding:24px; width:90%; max-width:500px; max-height:90vh; overflow-y:auto; }
+.modal h3 { font-size:16px; font-weight:800; margin-bottom:16px; }
+.mf { margin-bottom:12px; }
+.mf label { display:block; font-size:11px; font-weight:700; color:#374151; margin-bottom:4px; text-transform:uppercase; }
+.mf input, .mf select, .mf textarea { width:100%; padding:9px 12px; border:1px solid #E8EAED; border-radius:8px; font-size:13px; outline:none; font-family:inherit; }
+.mf input:focus, .mf select:focus, .mf textarea:focus { border-color:#D0011B; }
+.mf textarea { resize:vertical; height:60px; }
+.modal-btns { display:flex; gap:8px; margin-top:18px; }
+.msave { background:#D0011B; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer; flex:1; }
+.mcancel { background:#F3F4F6; color:#374151; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer; }
+
+/* Tracking modal */
+.track-modal { background:#fff; border-radius:16px; padding:24px; width:90%; max-width:440px; }
+.track-modal h3 { font-size:16px; font-weight:800; margin-bottom:8px; }
+.track-modal p { font-size:12px; color:#6B7280; margin-bottom:16px; }
+
+.spinner { width:40px; height:40px; border:3px solid #F3F4F6; border-top-color:#D0011B; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading { text-align:center; padding:80px 20px; color:#9CA3AF; }
+.errbox { background:#FEE2E2; color:#DC2626; padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-logo">ALINDA</div>
-  <div class="header-sep">/</div>
-  <div class="header-title">📦 Fulfillment Center</div>
-  <div class="header-spacer"></div>
-  <div class="header-sync" id="syncTime"></div>
-  <button class="btn-refresh" onclick="init()">🔄 Refresh</button>
+  <div class="logo">ALINDA</div>
+  <div class="sep">/</div>
+  <div class="htitle">📦 Fulfillment Center</div>
+  <div class="hspace"></div>
+  <div class="hsync" id="syncTime"></div>
+  <button class="hbtn vr" onclick="syncVR()" id="vrBtn">🚢 Sync VR Cargo</button>
+  <button class="hbtn" onclick="loadERP()">🔄 Refresh ERP</button>
+</div>
+
+<div class="vr-loading" id="vrLoading">
+  ⏳ กำลังอ่านข้อมูลจาก VR Cargo portal... เปิด Chrome extension แล้วกลับมาที่นี่
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="setTab('pending',this)">🟠 รอจัดส่ง <span class="tab-badge" id="badge-pending">0</span></button>
-  <button class="tab" onclick="setTab('packed',this)">✅ แพคแล้ว <span class="tab-badge green" id="badge-packed">0</span></button>
-  <button class="tab" onclick="setTab('all',this)">📋 ทั้งหมด</button>
+  <button class="tab active" onclick="setTab('pending',this)">🟠 รอจัดส่ง <span class="tbadge red" id="b-p">0</span></button>
+  <button class="tab" onclick="setTab('arrived',this)">✅ ถึงไทยแล้ว <span class="tbadge green" id="b-arr">0</span></button>
+  <button class="tab" onclick="setTab('nostock',this)">🟣 ต้องสั่งเพิ่ม <span class="tbadge purple" id="b-ns">0</span></button>
+  <button class="tab" onclick="setTab('packed',this)">📦 แพคแล้ว <span class="tbadge green" id="b-pk">0</span></button>
 </div>
 
 <div class="content">
+  <div id="errBox"></div>
   <div class="stats" id="statsRow"></div>
-  <div class="search-bar">
-    <input class="search-input" id="searchInput" placeholder="🔍 ค้นหา Order ID / สินค้า / ลูกค้า..." oninput="renderOrders()">
+  <div class="filters">
+    <input class="sinput" id="searchInput" placeholder="🔍 ค้นหา Order ID / สินค้า / ลูกค้า / tracking..." oninput="render()">
   </div>
   <div class="orders" id="ordersList">
-    <div class="loading"><div class="spinner"></div><div>กำลังโหลด Shopee orders...</div></div>
+    <div class="loading"><div class="spinner"></div><div>กำลังโหลด...</div></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="editModal">
+<!-- Edit Modal -->
+<div class="overlay" id="editModal">
   <div class="modal">
-    <h3>✏️ แก้ไขข้อมูล Order</h3>
-    <div class="mf"><label>Order ID</label><input id="edit-id" readonly style="background:#F9FAFB"></div>
-    <div class="mf"><label>ชื่อสินค้า (Product EN)</label><input id="edit-product" placeholder="เช่น Tuff Tray (Sensory) 1m"></div>
-    <div class="mf"><label>Tracking Number (VR Cargo)</label><input id="edit-tracking" placeholder="เช่น DPK301894878709"></div>
-    <div class="mf"><label>ต้นทุน/หน่วย (฿) รวมค่าขนส่ง VR</label><input id="edit-cost" type="number" placeholder="เช่น 3500"></div>
-    <div class="mf"><label>ราคาขาย Shopee (฿) ยอดรวม</label><input id="edit-price" type="number" placeholder="เช่น 11100"></div>
-    <div class="mf"><label>สถานะ VR (ถึงไทยแล้วหรือยัง)</label>
-      <input id="edit-vr-status" placeholder="เช่น ถึงไทย 26/06/2026 หรือ ยังไม่ถึง"></div>
+    <h3>✏️ แก้ไข / สอน Product Mapping</h3>
+    <div class="mf"><label>Order ID</label><input id="e-id" readonly style="background:#F9FAFB"></div>
+    <div class="mf"><label>ชื่อสินค้า (Product EN)</label><input id="e-prod"></div>
+    <div class="mf"><label>Tracking Number</label><input id="e-track" placeholder="เช่น 982930588"></div>
+    <div class="mf"><label>ต้นทุน/ชุด (฿) รวม VR แล้ว</label><input id="e-cost" type="number"></div>
+    <div class="mf"><label>ราคาขาย Shopee (฿)</label><input id="e-price" type="number"></div>
+    <div class="mf"><label>Cargo ผ่านที่ไหน</label>
+      <select id="e-cargo">
+        <option value="vr">VR Cargo (lunaka)</option>
+        <option value="bd">BD Cargo (ส่งตรง)</option>
+        <option value="other">อื่นๆ</option>
+      </select>
+    </div>
+    <div class="mf"><label>หมายเหตุ</label><textarea id="e-note"></textarea></div>
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeEdit()">ยกเลิก</button>
-      <button class="modal-save" onclick="saveEdit()">💾 บันทึก</button>
+      <button class="mcancel" onclick="closeEdit()">ยกเลิก</button>
+      <button class="msave" onclick="saveEdit()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Tracking Modal -->
+<div class="overlay" id="trackModal">
+  <div class="track-modal">
+    <h3>📦 ใส่ Tracking Number</h3>
+    <p>สั่งซื้อแล้ว — ใส่ tracking เพื่อติดตามสถานะ</p>
+    <div class="mf"><label>Tracking Number</label><input id="t-track" placeholder="เช่น 982930588"></div>
+    <div class="mf"><label>Cargo ผ่านที่ไหน</label>
+      <select id="t-cargo">
+        <option value="vr">VR Cargo (lunaka)</option>
+        <option value="bd">BD Cargo</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="mcancel" onclick="closeTrack()">ยกเลิก</button>
+      <button class="msave" onclick="saveTracking()">✅ บันทึก Tracking</button>
     </div>
   </div>
 </div>
 
 <script>
-const PRODUCT_MAP = [
-  { kw:['stall bar','wall bar','jungle gym'], p:'Stall Bar / Wall Bar', e:'🧱', cost:8500 },
-  { kw:['tuff tray','tray','sensory tray','ถาดกิจกรรม'], p:'Tuff Tray (Sensory) 1m', e:'🌊', cost:3200 },
-  { kw:['climbing wall','攀岩板','climbing panel'], p:'Climbing Wall Panel', e:'🧗', cost:4500 },
-  { kw:['climbing frame','indoor climbing','攀爬架'], p:'Indoor Climbing Frame', e:'🧗', cost:6500 },
-  { kw:['dome climber','dome'], p:'Dome Climber', e:'⛺', cost:3200 },
-  { kw:['balance board','balance beam','stepping stone','过河石'], p:'Balance Board', e:'⚖️', cost:1800 },
-  { kw:['nugget','play sofa'], p:'Nugget Play Sofa', e:'🛋️', cost:4500 },
-  { kw:['light table','reggio'], p:'Light Table (Reggio)', e:'💡', cost:2800 },
-  { kw:['storage','cabinet','toy shelf'], p:'Toy Storage Cabinet', e:'📦', cost:2200 },
-  { kw:['swing board','rubber swing'], p:'Rubber Swing Board', e:'🤸', cost:600 },
-  { kw:['slide','สไลเดอร์'], p:'Slide', e:'🛝', cost:2500 },
-  { kw:['overhead ladder','cloud ladder'], p:'Overhead Ladder', e:'🪜', cost:5500 },
-  { kw:['moon table','moon-shaped'], p:'Moon-shaped Table', e:'🌙', cost:1800 },
-  { kw:['hollow blocks'], p:'Large Hollow Blocks', e:'🏗️', cost:4500 },
-  { kw:['swing','秋千'], p:'Swing', e:'🤸', cost:800 },
-  { kw:['sand','sandpit','玩沙'], p:'Sand Play Equipment', e:'🏖️', cost:1500 },
+// ============================================================
+// CONFIG
+// ============================================================
+const API_KEY  = "AIzaSyA5AXEVz7IFgymb30bsPlyPu9QvPitha_w"; // ← ใส่ API Key ใหม่ที่นี่
+const SHEET_ID = "1blB8MYJG8xpHeP3Nqn32rfpP7OIsmMlpKZw9ZLOsCSY";
+const SHOPEE_FEE = 0.29;
+const TODAY = new Date('2026-07-02');
+
+// ============================================================
+// PRODUCT MAP
+// ============================================================
+const PMAP = [
+  { kw:['stall bar','wall bar','jungle gym','肋木','引体'], p:'Stall Bar / Wall Bar', e:'🧱' },
+  { kw:['tuff tray','ถาดกิจกรรม','sensory tray','大黑盘','感官盘'], p:'Tuff Tray (Sensory) 1m', e:'🌊' },
+  { kw:['climbing wall panel','攀岩板'], p:'Climbing Wall Panel', e:'🧗' },
+  { kw:['indoor climbing','climbing frame','攀爬架'], p:'Indoor Climbing Frame', e:'🧗' },
+  { kw:['dome climber','dome'], p:'Dome Climber', e:'⛺' },
+  { kw:['balance board','stepping stone','过河石','平衡板'], p:'Balance Board', e:'⚖️' },
+  { kw:['nugget','play sofa','积木沙发'], p:'Nugget Play Sofa', e:'🛋️' },
+  { kw:['light table','reggio','光影桌'], p:'Light Table (Reggio)', e:'💡' },
+  { kw:['storage cabinet','收纳柜','玩具柜'], p:'Toy Storage Cabinet', e:'📦' },
+  { kw:['bookshelf','书架'], p:'Bookshelf', e:'📚' },
+  { kw:['rubber swing board','swing board','橡胶秋千'], p:'Rubber Swing Board', e:'🤸' },
+  { kw:['swing','秋千'], p:'Swing', e:'🤸' },
+  { kw:['overhead ladder','云梯'], p:'Overhead Ladder', e:'🪜' },
+  { kw:['moon table','月亮桌'], p:'Moon-shaped Table', e:'🌙' },
+  { kw:['hollow blocks','空心积木'], p:'Large Hollow Blocks', e:'🏗️' },
+  { kw:['sand play','sandpit','沙池','玩沙'], p:'Sand Play Equipment', e:'🏖️' },
+  { kw:['slide','滑梯'], p:'Slide', e:'🛝' },
+  { kw:['high chair','餐椅'], p:'High Chair', e:'🪑' },
+  { kw:['kindergarten table','幼儿园桌'], p:'Kindergarten Table', e:'🪑' },
 ];
 
-const ERP_TRACKING = {
-  'Stall Bar / Wall Bar': 'DPK301896689290',
-  'Tuff Tray (Sensory) 1m': 'DPK301894878709',
-  'Sand Play Equipment': 'S71686184407',
-  'Indoor Climbing Frame': 'S71110885610',
-  'Rubber Swing Board': 'SF0221199293316',
-  'Balance Board': '982930588',
-  'Climbing Wall Panel': 'YT7598779814837',
-};
+// VR DATA — updated by "Sync VR Cargo" button
+// Format: { tracking: { arrivedTH, shippingCost, lot, isArrived } }
+let vrData = JSON.parse(localStorage.getItem('a_vr_v1') || '{}');
 
-const ORDERS_RAW = [
+// ERP DATA — from Google Sheet
+let erpItems = [];
+
+// STATE
+let packed = JSON.parse(localStorage.getItem('a_packed_v5') || '{}');
+let overrides = JSON.parse(localStorage.getItem('a_ov_v5') || '{}');
+let trackOverrides = JSON.parse(localStorage.getItem('a_track_v5') || '{}'); // manually added trackings
+let currentTab = 'pending';
+let editingId = null;
+let trackingForId = null;
+
+// SHOPEE ORDERS from Gmail
+const SHOPEE = [
   { id:'#260702M8CH0YYD', customer:'phanuwatphph', deadline:'2026-08-05', date:'2026-07-02', raw:'Alinda STALL BAR WALL BAR fitness pilates jungle gym', qty:1, price:32500, variant:'M' },
-  { id:'#260702KN4U3W22', customer:'deepakdang', deadline:'2026-07-16', date:'2026-07-02', raw:'Tuff tray ถาดกิจกรรม sensory play loose part early year kindergarten', qty:2, price:11100, variant:'Tray+stand 100cm' },
-  { id:'#260702KK6MSANQ', customer:'35593559bigblue', deadline:'2026-07-16', date:'2026-07-02', raw:'Balance Board Stepping Stones sensory training kids', qty:1, price:3200, variant:'' },
-  { id:'#260630E94AHAXJ', customer:'chaokha.kids', deadline:'2026-07-24', date:'2026-06-30', raw:'Indoor Climbing Frame multi-function wood foldable', qty:1, price:8900, variant:'' },
+  { id:'#260702KN4U3W22', customer:'deepakdang', deadline:'2026-07-16', date:'2026-07-02', raw:'Tuff tray ถาดกิจกรรม sensory play loose part early year', qty:2, price:11100, variant:'Tray+stand 100cm' },
+  { id:'#260702KK6MSANQ', customer:'35593559bigblue', deadline:'2026-07-16', date:'2026-07-02', raw:'Balance Board Stepping Stones sensory kids', qty:1, price:3200, variant:'' },
+  { id:'#260630E94AHAXJ', customer:'chaokha.kids', deadline:'2026-07-24', date:'2026-06-30', raw:'Indoor Climbing Frame multi-function foldable wood', qty:1, price:8900, variant:'' },
   { id:'#260629BUPXCKYJ', customer:'preeyapornsaw', deadline:'2026-07-23', date:'2026-06-29', raw:'Tuff tray sensory tray 100cm kindergarten', qty:1, price:5550, variant:'' },
-  { id:'#26062895WWCYUR', customer:'natyongvongphaiboon', deadline:'2026-07-04', date:'2026-06-28', raw:'Rubber Swing Board silicon indoor outdoor kids', qty:1, price:1290, variant:'' },
-  { id:'#2606288TWH39R4', customer:'ito_onz', deadline:'2026-08-01', date:'2026-06-27', raw:'Alinda STALL BAR WALL BAR wall mount bar training', qty:1, price:32500, variant:'L' },
-  { id:'#2606264RFYK3VS', customer:'pantakanrimkeeree', deadline:'2026-07-10', date:'2026-06-26', raw:'Dome climber outdoor indoor balance training 10FT', qty:1, price:4500, variant:'10FT' },
+  { id:'#26062895WWCYUR', customer:'natyongvongphaiboon', deadline:'2026-07-04', date:'2026-06-28', raw:'Rubber Swing Board silicon indoor outdoor', qty:1, price:1290, variant:'' },
+  { id:'#2606288TWH39R4', customer:'ito_onz', deadline:'2026-08-01', date:'2026-06-27', raw:'Alinda STALL BAR WALL BAR wall mount hanger bar training', qty:1, price:32500, variant:'L' },
+  { id:'#2606264RFYK3VS', customer:'pantakanrimkeeree', deadline:'2026-07-10', date:'2026-06-26', raw:'Dome climber 10FT outdoor indoor balance', qty:1, price:4500, variant:'10FT' },
   { id:'#260622QTB3NU1X', customer:'daungvan', deadline:'2026-07-08', date:'2026-06-22', raw:'Tuff tray sensory tray 1m black', qty:2, price:11100, variant:'' },
-  { id:'#260618DNFKS4UN', customer:'puiifaii44', deadline:'2026-07-07', date:'2026-06-18', raw:'Toy Storage Cabinet bookshelf wood kids', qty:1, price:3800, variant:'' },
-  { id:'#260617AC327ED0', customer:'sevener07', deadline:'2026-07-03', date:'2026-06-17', raw:'Climbing Wall Panel wood indoor gym', qty:1, price:6500, variant:'' },
+  { id:'#260618DNFKS4UN', customer:'puiifaii44', deadline:'2026-07-07', date:'2026-06-18', raw:'Toy Storage Cabinet bookshelf wood', qty:1, price:3800, variant:'' },
+  { id:'#260617AC327ED0', customer:'sevener07', deadline:'2026-07-03', date:'2026-06-17', raw:'Climbing Wall Panel wood indoor', qty:1, price:6500, variant:'' },
   { id:'#2606169DVW14H1', customer:'soungpichate', deadline:'2026-07-02', date:'2026-06-16', raw:'Balance board stepping stones sensory play', qty:1, price:2800, variant:'' },
 ];
 
-let packed = JSON.parse(localStorage.getItem('alinda_packed_v3')||'{}');
-let overrides = JSON.parse(localStorage.getItem('alinda_ov_v3')||'{}');
-let currentTab = 'pending';
-let editingId = null;
-const TODAY = '2026-07-02';
+// ============================================================
+// FETCH ERP
+// ============================================================
+async function fetchSheet(tab) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tab)}?key=${API_KEY}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return (await r.json()).values || [];
+}
 
-function matchProduct(raw) {
-  const t = raw.toLowerCase();
-  for (const m of PRODUCT_MAP) {
-    if (m.kw.some(k => t.includes(k.toLowerCase()))) return m;
+function parseTaobao(rows) {
+  return rows.slice(1).filter(c => c[0] && c[1]?.startsWith('2026') && !['订单状态','交易关闭'].includes(c[2]))
+    .filter(c => parseFloat((c[9]||'0').replace(/[￥,]/g,'')) > 0)
+    .map(c => ({
+      source:'Taobao', name:c[4]||'', qty:parseInt(c[7])||1,
+      cny:parseFloat((c[9]||'0').replace(/[￥,]/g,''))||0,
+      tracking:(c[12]||'').trim(), url:c[5]||'', date:c[1]?.slice(0,10)||''
+    }));
+}
+
+function parse1688(rows) {
+  let headers = null;
+  const items = [];
+  rows.forEach(c => {
+    if (c[0]==='订单编号') { headers = c; return; }
+    if (!headers) return;
+    const g = n => { const i=headers.indexOf(n); return i>=0?(c[i]||'').trim():''; };
+    if (g('订单状态')==='交易关闭') return;
+    const dateRaw = g('订单创建时间');
+    if (!dateRaw.startsWith('2026')) return;
+    const paid = parseFloat(g('实付款(元)').replace(/[,，]/g,''))||0;
+    if (!paid) return;
+    items.push({
+      source:'1688', name:g('货品标题'), qty:parseInt(g('数量'))||1,
+      cny:paid, tracking:g('运单号'), url:'', date:dateRaw.slice(0,10)
+    });
+  });
+  return items;
+}
+
+async function loadERP() {
+  if (API_KEY === 'YOUR_NEW_API_KEY_HERE') {
+    document.getElementById('errBox').innerHTML = `<div class="errbox">⚠️ ใส่ API Key ก่อนค่ะ — แก้ <code>const API_KEY = "..."</code> ในไฟล์นี้</div>`;
+    render(); return;
   }
-  return { p: raw.slice(0,40), e:'📦', cost:0, unmatched:true };
+  try {
+    document.getElementById('errBox').innerHTML = '';
+    const [tb, s16] = await Promise.all([fetchSheet('Taobao'), fetchSheet('1688')]);
+    erpItems = [...parseTaobao(tb), ...parse1688(s16)].filter(e => e.name);
+    document.getElementById('syncTime').textContent = `ERP ${erpItems.length} items · ${new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;
+    render();
+  } catch(e) {
+    document.getElementById('errBox').innerHTML = `<div class="errbox">❌ ดึง ERP ไม่ได้: ${e.message}</div>`;
+    render();
+  }
 }
 
-function daysDiff(deadline) {
-  return Math.ceil((new Date(deadline) - new Date(TODAY)) / 86400000);
+// ============================================================
+// VR SYNC — reads from Claude in Chrome message
+// ============================================================
+function syncVR() {
+  document.getElementById('vrLoading').classList.add('show');
+  document.getElementById('vrBtn').textContent = '⏳ กำลัง Sync...';
+
+  // Listen for VR data from Chrome extension via postMessage
+  window.addEventListener('message', function handler(e) {
+    if (e.data?.type === 'VR_DATA') {
+      vrData = e.data.data;
+      localStorage.setItem('a_vr_v1', JSON.stringify(vrData));
+      document.getElementById('vrLoading').classList.remove('show');
+      document.getElementById('vrBtn').textContent = '🚢 Sync VR Cargo';
+      window.removeEventListener('message', handler);
+      render();
+      alert(`✅ Sync VR สำเร็จ!\n\nถึงไทยแล้ว: ${Object.values(vrData).filter(v=>v.isArrived).length} รายการ\nยังไม่ถึง: ${Object.values(vrData).filter(v=>!v.isArrived).length} รายการ`);
+    }
+  });
+
+  // Open VR portal in new tab with auto-reader script
+  const script = `
+// Auto-read VR Cargo data and send to Fulfillment app
+(function() {
+  const mainTable = document.querySelector('table.lot_table');
+  if (!mainTable) { alert('ไม่พบข้อมูล VR — เปิดหน้า /payment/create ก่อนค่ะ'); return; }
+  
+  const rows = [...mainTable.querySelectorAll('tbody tr')];
+  const data = {};
+  
+  rows.forEach(row => {
+    const cells = [...row.querySelectorAll('td')].map(td => td.innerText.trim());
+    if (cells.length < 20) return;
+    const tracking = cells[2];
+    if (!tracking || tracking === '-') return;
+    
+    const arrivedTH = cells[20] || '';
+    const isArrived = !!(arrivedTH && arrivedTH.match(/\\d{2}\\/\\d{2}\\/\\d{4}/));
+    const priceKg = parseFloat((cells[21]||'').replace(/[^0-9.]/g,'')) || 0;
+    const priceCbm = parseFloat((cells[22]||'').replace(/[^0-9.]/g,'')) || 0;
+    
+    data[tracking] = {
+      lot: cells[1],
+      tracking,
+      enteredWH: cells[18] || '',
+      exitWH: cells[19] || '',
+      arrivedTH: isArrived ? arrivedTH : null,
+      isArrived,
+      shippingCost: priceKg || priceCbm || 0
+    };
+  });
+  
+  // Send back to opener
+  if (window.opener) {
+    window.opener.postMessage({ type: 'VR_DATA', data }, '*');
+    alert('✅ ส่งข้อมูลกลับแล้ว! กลับไปหน้า Fulfillment ได้เลยค่ะ');
+    window.close();
+  } else {
+    alert('ไม่พบ opener window');
+  }
+})();
+  `;
+
+  const encoded = encodeURIComponent(script);
+  const newWin = window.open('https://portal.vr-cargo.com/payment/create', '_blank');
+
+  // Show instruction
+  setTimeout(() => {
+    alert('📋 วิธี Sync VR Cargo:\n\n1. รอหน้า VR Cargo โหลดเสร็จ\n2. กด F12 → Console\n3. Paste โค้ดนี้แล้วกด Enter:\n\n' + script.trim());
+  }, 2000);
 }
 
-function dlBadge(days, dl) {
-  const d = new Date(dl).toLocaleDateString('th-TH',{day:'numeric',month:'short'});
-  if (days < 0) return `<span class="dl-badge dl-urgent">⚠️ เกิน ${Math.abs(days)} วัน</span>`;
-  if (days <= 3) return `<span class="dl-badge dl-urgent">🔴 ${d} (${days}วัน)</span>`;
-  if (days <= 7) return `<span class="dl-badge dl-soon">🟡 ${d} (${days}วัน)</span>`;
-  return `<span class="dl-badge dl-ok">🟢 ${d} (${days}วัน)</span>`;
+// ============================================================
+// PROCESS
+// ============================================================
+function matchProduct(raw) {
+  const t = (raw||'').toLowerCase();
+  for (const m of PMAP) if (m.kw.some(k=>t.includes(k.toLowerCase()))) return m;
+  return { p:raw?.slice(0,40)||'?', e:'📦', unmatched:true };
 }
 
-function processAll() {
-  return ORDERS_RAW.map(o => {
-    const ov = overrides[o.id] || {};
-    const m = matchProduct(ov.raw || o.raw);
-    const product = ov.product || m.p;
-    const emoji = m.e || '📦';
-    const isMatched = !m.unmatched;
-    const tracking = ov.tracking || ERP_TRACKING[product] || '';
-    const costPU = ov.cost ? parseFloat(ov.cost) : (m.cost || 0);
-    const sellPrice = ov.price ? parseFloat(ov.price) : (o.price || 0);
-    const totalCost = costPU * o.qty;
-    const profit = sellPrice - totalCost;
-    const margin = sellPrice > 0 ? Math.round((profit/sellPrice)*100) : 0;
-    const vrStatus = ov.vrStatus || '';
-    const vrArrived = vrStatus && vrStatus.includes('ถึงไทย');
-    const days = daysDiff(o.deadline);
-    return { ...o, product, emoji, isMatched, tracking, costPU, sellPrice, totalCost, profit, margin, vrStatus, vrArrived, days };
+function findERP(productName) {
+  const pLower = productName.toLowerCase();
+  return erpItems.filter(e => {
+    const eLower = e.name.toLowerCase();
+    const pm = PMAP.find(m=>m.p===productName);
+    if (pm) return pm.kw.some(k=>eLower.includes(k.toLowerCase()));
+    return false;
   });
 }
 
-function vrBlock(o) {
-  if (!o.tracking) return `
-    <div class="section-pad"><div class="vr-box vr-unknown">
-      <div class="vr-dot vr-dot-gray"></div>
-      <div class="vr-text"><strong>ไม่มี Tracking Number</strong><span>กด ✏️ แก้ไข เพื่อใส่ tracking จาก ERP</span></div>
+function getVRStatus(tracking) {
+  if (!tracking) return null;
+  // Check exact match
+  if (vrData[tracking]) return vrData[tracking];
+  // Check base tracking (without suffix)
+  const base = tracking.replace(/-\d+$/, '');
+  const found = Object.values(vrData).find(v => v.tracking === base || v.tracking.startsWith(base));
+  return found || null;
+}
+
+function daysDiff(dl) {
+  return Math.ceil((new Date(dl) - TODAY) / 86400000);
+}
+
+function processAll() {
+  return SHOPEE.map(o => {
+    const ov = overrides[o.id] || {};
+    const tr = trackOverrides[o.id] || {};
+    const m = matchProduct(o.raw);
+    const product = ov.product || m.p;
+    const emoji = m.e || '📦';
+
+    // Find ERP matches
+    const erpMatches = findERP(product);
+    const erpItem = erpMatches[0] || null;
+    const hasErp = erpMatches.length > 0;
+
+    // Tracking
+    const tracking = ov.tracking || tr.tracking || erpItem?.tracking || '';
+    const cargoType = ov.cargo || tr.cargo || (tracking.match(/^(DPK|SF|S7)/i) ? 'bd' : tracking ? 'vr' : '');
+
+    // VR status
+    const vr = cargoType === 'vr' ? getVRStatus(tracking) : null;
+    const isBD = cargoType === 'bd';
+
+    // Stock status
+    let stockStatus = 'nostock';
+    if (isBD && tracking) stockStatus = 'bd-direct';
+    else if (vr?.isArrived) stockStatus = 'arrived';
+    else if (vr && !vr.isArrived) stockStatus = 'transit';
+    else if (tracking && cargoType) stockStatus = 'tracking-added';
+    else if (hasErp && !tracking) stockStatus = 'has-erp-no-tracking';
+
+    // Cost
+    const vrCost = vr?.shippingCost || 0;
+    const cnyUnit = ov.cost ? 0 : (erpItem ? erpItem.cny / erpItem.qty : 0);
+    const costTHB = ov.cost ? parseFloat(ov.cost) : Math.round(cnyUnit * 4.95) + vrCost;
+
+    // Profit
+    const sellPrice = ov.price ? parseFloat(ov.price) : o.price;
+    const netRevenue = Math.round(sellPrice * (1 - SHOPEE_FEE));
+    const profit = netRevenue - (costTHB * o.qty);
+    const margin = sellPrice > 0 ? Math.round((profit/sellPrice)*100) : 0;
+
+    const days = daysDiff(o.deadline);
+
+    return { ...o, product, emoji, hasErp, erpMatches, erpItem, tracking, cargoType, vr, isBD, stockStatus, costTHB, sellPrice, netRevenue, profit, margin, days, ov };
+  });
+}
+
+// ============================================================
+// RENDER HELPERS
+// ============================================================
+function dlBadge(days, dl) {
+  const d = new Date(dl).toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+  if (days<0) return `<span class="dl-badge dl-u">⚠️ เกิน ${Math.abs(days)}วัน</span>`;
+  if (days<=3) return `<span class="dl-badge dl-u">🔴 ${d} (${days}วัน)</span>`;
+  if (days<=7) return `<span class="dl-badge dl-s">🟡 ${d} (${days}วัน)</span>`;
+  return `<span class="dl-badge dl-o">🟢 ${d} (${days}วัน)</span>`;
+}
+
+function statusBlock(o) {
+  const { stockStatus, vr, tracking, isBD, hasErp, erpMatches, erpItem } = o;
+
+  // ERP purchase link
+  const erpLink = erpItem?.url ? `<a href="${erpItem.url}" target="_blank">🛒 สั่งซื้ออีกครั้ง</a>` : '';
+  const erpInfo = hasErp ? `
+    <div class="sp"><div class="erp-row">
+      <div class="erp-col"><strong>📋 ERP Match</strong><span>${erpMatches.length} รายการ</span></div>
+      ${erpItem ? `<div class="erp-col"><strong>ราคาจีน</strong><span>¥${erpItem.cny.toFixed(0)} (฿${Math.round(erpItem.cny*4.95).toLocaleString()})</span></div>` : ''}
+      ${erpItem ? `<div class="erp-col"><strong>Tracking ERP</strong><span class="track">${erpItem.tracking||'-'}</span></div>` : ''}
+      ${erpItem?.url ? `<div class="erp-col"><strong>ลิงค์สั่งซื้อ</strong>${erpLink}</div>` : ''}
+    </div></div>` : '';
+
+  if (stockStatus === 'nostock' && !hasErp) return `
+    ${erpInfo}
+    <div class="sp"><div class="status-box sb-nostock">
+      <div class="sdot sd-p"></div>
+      <div class="stext"><strong>🟣 ไม่มีสต็อค — ยังไม่เคยสั่งสินค้านี้</strong>
+        <span>ต้องสั่งจาก Taobao/1688 ก่อน — กด "สั่งซื้อเพิ่ม" แล้วใส่ tracking กลับมา</span>
+      </div>
     </div></div>`;
 
-  if (o.vrArrived) return `
-    <div class="section-pad"><div class="vr-box vr-arrived">
-      <div class="vr-dot vr-dot-green"></div>
-      <div class="vr-text"><strong>✅ ถึงไทยแล้ว</strong><span>${o.vrStatus}</span></div>
+  if (stockStatus === 'has-erp-no-tracking') return `
+    ${erpInfo}
+    <div class="sp"><div class="status-box sb-unknown">
+      <div class="sdot sd-gr"></div>
+      <div class="stext"><strong>📋 พบใน ERP — รอใส่ Tracking</strong>
+        <span>สั่งจากจีนแล้ว — กด "ใส่ Tracking" เพื่อติดตามสถานะ</span>
+      </div>
     </div></div>`;
 
-  if (o.vrStatus && !o.vrArrived) return `
-    <div class="section-pad"><div class="vr-box vr-transit">
-      <div class="vr-dot vr-dot-yellow"></div>
-      <div class="vr-text"><strong>⏳ ${o.vrStatus}</strong><span>Tracking: ${o.tracking}</span></div>
-      <a class="btn-vr" href="https://portal.vr-cargo.com/tracking" target="_blank">🔍 VR Portal</a>
+  if (stockStatus === 'arrived') return `
+    ${erpInfo}
+    <div class="sp"><div class="status-box sb-arrived">
+      <div class="sdot sd-g"></div>
+      <div class="stext"><strong>✅ ถึงไทยแล้ว — พร้อมแพค!</strong>
+        <span>ถึงไทย: ${vr.arrivedTH} · LOT: ${vr.lot} · ค่าขนส่ง VR: ฿${vr.shippingCost.toLocaleString()}</span>
+        <div class="track">${tracking}</div>
+      </div>
     </div></div>`;
 
-  return `
-    <div class="section-pad"><div class="vr-box vr-unknown">
-      <div class="vr-dot vr-dot-gray"></div>
-      <div class="vr-text"><strong>${o.tracking}</strong><span>ยังไม่ได้เช็คสถานะ — กด เช็ค VR แล้วอัปเดตใน ✏️ แก้ไข</span></div>
-      <a class="btn-vr" href="https://portal.vr-cargo.com/tracking" target="_blank">🔍 เช็ค VR</a>
+  if (stockStatus === 'transit') return `
+    ${erpInfo}
+    <div class="sp"><div class="status-box sb-transit">
+      <div class="sdot sd-y"></div>
+      <div class="stext"><strong>⏳ อยู่ระหว่างขนส่ง — รอถึงไทย</strong>
+        <span>เข้าโกดังจีน: ${vr.enteredWH || '-'} · ยังไม่ถึงไทย</span>
+        <div class="track">${tracking}</div>
+      </div>
+      <a class="sbtn sbtn-vr" href="https://portal.vr-cargo.com/tracking" target="_blank">🔍 VR Portal</a>
     </div></div>`;
+
+  if (stockStatus === 'bd-direct') return `
+    ${erpInfo}
+    <div class="sp"><div class="status-box sb-bd">
+      <div class="sdot sd-b"></div>
+      <div class="stext"><strong>📦 BD Cargo — ส่งตรงจากจีน</strong>
+        <span>ติดตามได้ผ่านระบบ BD Cargo โดยตรง</span>
+        <div class="track">${tracking}</div>
+      </div>
+    </div></div>`;
+
+  if (stockStatus === 'tracking-added') return `
+    ${erpInfo}
+    <div class="sp"><div class="status-box sb-transit">
+      <div class="sdot sd-y"></div>
+      <div class="stext"><strong>⏳ ใส่ Tracking แล้ว — รอ Sync VR</strong>
+        <span>กด 🚢 Sync VR Cargo เพื่ออัปเดตสถานะ</span>
+        <div class="track">${tracking}</div>
+      </div>
+    </div></div>`;
+
+  return `${erpInfo}`;
 }
 
 function costBlock(o) {
-  if (!o.costPU) return '';
-  return `
-    <div class="section-pad"><div class="cost-grid">
-      <div><div class="ci-label">ต้นทุน/หน่วย</div><div class="ci-val">฿${o.costPU.toLocaleString()}</div></div>
-      <div><div class="ci-label">ต้นทุนรวม</div><div class="ci-val">฿${o.totalCost.toLocaleString()}</div></div>
-      <div><div class="ci-label">กำไร</div><div class="ci-val ${o.profit>=0?'profit-pos':'profit-neg'}">฿${o.profit.toLocaleString()}</div></div>
-      <div><div class="ci-label">Margin</div><div class="ci-val ${o.profit>=0?'profit-pos':'profit-neg'}">${o.margin}%</div></div>
-    </div></div>`;
+  if (!o.sellPrice) return '';
+  return `<div class="sp"><div class="cost-grid">
+    <div><div class="cg-label">ราคา Shopee</div><div class="cg-val">฿${o.sellPrice.toLocaleString()}</div></div>
+    <div><div class="cg-label">หัก Shopee 29%</div><div class="cg-val" style="color:#EF4444">-฿${(o.sellPrice-o.netRevenue).toLocaleString()}</div></div>
+    <div><div class="cg-label">รายได้สุทธิ</div><div class="cg-val">฿${o.netRevenue.toLocaleString()}</div></div>
+    <div><div class="cg-label">ต้นทุน (฿)</div><div class="cg-val" style="color:#EF4444">-฿${(o.costTHB*o.qty).toLocaleString()}</div></div>
+    <div><div class="cg-label">กำไร / Margin</div><div class="cg-val ${o.profit>=0?'pp':'pn'}">฿${o.profit.toLocaleString()} (${o.margin}%)</div></div>
+  </div></div>`;
 }
 
-function renderOrders() {
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
   const all = processAll();
   const q = document.getElementById('searchInput').value.toLowerCase();
+
+  const counts = {
+    pending: all.filter(o=>!packed[o.id]),   // ทุก order ที่ยังไม่แพค
+    arrived: all.filter(o=>!packed[o.id]&&o.stockStatus==='arrived'),
+    nostock: all.filter(o=>!packed[o.id]&&['nostock','has-erp-no-tracking'].includes(o.stockStatus)),
+    packed:  all.filter(o=>packed[o.id]),
+  };
+
+  document.getElementById('b-p').textContent   = counts.pending.length;
+  document.getElementById('b-arr').textContent = counts.arrived.length;
+  document.getElementById('b-ns').textContent  = counts.nostock.length;
+  document.getElementById('b-pk').textContent  = counts.packed.length;
+
+  const pend = all.filter(o=>!packed[o.id]);
+  const rev = pend.reduce((a,o)=>a+o.netRevenue,0);
+  const prof = pend.reduce((a,o)=>a+o.profit,0);
+  const urgent = pend.filter(o=>o.days<=3);
+  const arrived = all.filter(o=>o.stockStatus==='arrived'&&!packed[o.id]);
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><div class="slabel">🟠 รอจัดส่ง</div><div class="sval" style="color:#D0011B">${counts.pending.length}</div><div class="ssub">orders</div></div>
+    <div class="stat"><div class="slabel">✅ ถึงไทยแล้ว</div><div class="sval" style="color:#10B981">${arrived.length}</div><div class="ssub">พร้อมแพค</div></div>
+    <div class="stat"><div class="slabel">⚠️ เร่งด่วน</div><div class="sval" style="color:#EF4444">${urgent.length}</div><div class="ssub">≤3 วัน</div></div>
+    <div class="stat"><div class="slabel">🟣 ต้องสั่งเพิ่ม</div><div class="sval" style="color:#8B5CF6">${counts.nostock.length}</div><div class="ssub">ไม่มีสต็อค</div></div>
+    <div class="stat"><div class="slabel">💰 รายได้สุทธิ</div><div class="sval" style="color:#D0011B;font-size:15px">฿${rev.toLocaleString()}</div><div class="ssub">หัก 29%</div></div>
+    <div class="stat"><div class="slabel">📈 กำไรรวม</div><div class="sval" style="color:#10B981;font-size:15px">฿${prof.toLocaleString()}</div><div class="ssub">ประมาณการ</div></div>
+  `;
+
   const filtered = all.filter(o => {
     const ip = !!packed[o.id];
-    if (currentTab==='pending' && ip) return false;
-    if (currentTab==='packed' && !ip) return false;
-    if (q && !o.id.toLowerCase().includes(q) && !o.product.toLowerCase().includes(q) && !o.customer.toLowerCase().includes(q)) return false;
+    const ns = ['nostock','has-erp-no-tracking'].includes(o.stockStatus);
+    const arr = o.stockStatus==='arrived';
+    if (currentTab==='pending' && ip) return false;                    // รอจัดส่ง = ทุกอันที่ยังไม่แพค
+    if (currentTab==='arrived' && (ip||!arr)) return false;            // ถึงไทยแล้ว = arrived เท่านั้น
+    if (currentTab==='nostock' && (!ns||ip)) return false;             // ต้องสั่งเพิ่ม = nostock เท่านั้น
+    if (currentTab==='packed' && !ip) return false;                    // แพคแล้ว
+    if (q && !o.id.toLowerCase().includes(q) && !o.product.toLowerCase().includes(q) && !o.customer.toLowerCase().includes(q) && !(o.tracking||'').includes(q)) return false;
     return true;
   }).sort((a,b) => {
     const ap=!!packed[a.id],bp=!!packed[b.id];
     if(ap!==bp) return ap?1:-1;
+    // arrived first, then by urgency
+    const order = {arrived:0, transit:1, 'tracking-added':2, 'bd-direct':3, 'has-erp-no-tracking':4, nostock:5};
+    const ao = order[a.stockStatus]??3, bo = order[b.stockStatus]??3;
+    if(ao!==bo) return ao-bo;
     return a.days - b.days;
   });
 
-  updateStats(all);
-
   if (!filtered.length) {
-    document.getElementById('ordersList').innerHTML = `<div style="text-align:center;padding:60px 20px"><div style="font-size:40px;margin-bottom:12px">${currentTab==='packed'?'📋':'🎉'}</div><div style="font-size:15px;font-weight:700;color:#374151">${currentTab==='packed'?'ยังไม่มีที่แพคแล้ว':'ทุก order แพคหมดแล้ว!'}</div></div>`;
+    document.getElementById('ordersList').innerHTML = `<div style="text-align:center;padding:60px 20px"><div style="font-size:40px;margin-bottom:12px">🎉</div><div style="font-size:15px;font-weight:700;color:#374151">ไม่มี order ในหมวดนี้</div></div>`;
     return;
   }
 
   document.getElementById('ordersList').innerHTML = filtered.map(o => {
     const ip = !!packed[o.id];
-    const cls = ip ? 'packed-card' : (o.days<=3 ? 'urgent' : 'normal');
-    return `<div class="order-card ${cls}">
-      <div class="order-top">
-        <div class="order-icon">${o.emoji}</div>
-        <div class="order-main">
-          <div class="order-id">${o.id}</div>
-          <div class="order-product">${o.product}<span class="${o.isMatched?'match-badge':'unmatched-badge'}">${o.isMatched?'✓ matched':'? unmatched'}</span></div>
-          <div class="order-meta">
-            <span class="meta-item">👤 <strong>${o.customer}</strong></span>
-            <span class="meta-item">Qty ${o.qty}</span>
-            ${o.variant?`<span class="meta-item">📌 ${o.variant}</span>`:''}
+    const cls = ip ? 'done'
+      : o.stockStatus==='arrived' ? 'ready'
+      : ['transit','tracking-added','bd-direct'].includes(o.stockStatus) ? 'transit'
+      : ['nostock','has-erp-no-tracking'].includes(o.stockStatus) ? 'nostock'
+      : o.days<=3 ? 'urgent' : 'normal';
+
+    const canPack = o.stockStatus==='arrived' || o.isBD || ip;
+
+    return `<div class="card ${cls}">
+      <div class="ctop">
+        <div class="cicon">${o.emoji}</div>
+        <div class="cmain">
+          <div class="cid">${o.id}</div>
+          <div class="cprod">
+            ${o.product}
+            <span class="badge ${o.hasErp?'b-erp':'b-noerp'}">${o.hasErp?'📋 ERP ✓':'⚠️ ไม่มีในERP'}</span>
+          </div>
+          <div class="cmeta">
+            <span class="mi">👤 <strong>${o.customer}</strong></span>
+            <span class="mi">Qty ${o.qty}</span>
+            ${o.variant?`<span class="mi">📌 ${o.variant}</span>`:''}
             ${dlBadge(o.days, o.deadline)}
           </div>
         </div>
-        <div class="order-right">
-          <div class="order-price">฿${o.sellPrice.toLocaleString()}</div>
-          ${o.costPU?`<div class="profit-val ${o.profit>=0?'profit-pos':'profit-neg'}">กำไร ${o.margin}%</div>`:''}
+        <div class="cright">
+          <div class="cprice">฿${o.sellPrice.toLocaleString()}</div>
+          ${o.costTHB?`<div class="cprofit ${o.profit>=0?'pp':'pn'}">กำไร ${o.margin}%</div>`:''}
         </div>
       </div>
-      ${vrBlock(o)}
+      ${statusBlock(o)}
       ${costBlock(o)}
-      <div class="order-actions">
+      <div class="cactions">
         ${ip
-          ? `<button class="btn-packed-done">✅ แพคแล้ว</button><span class="packed-time">บันทึก ${packed[o.id]}</span>`
-          : `<button class="btn-pack" onclick="packOrder('${o.id}')">✅ แพคแล้ว</button>
-             <a class="btn-shopee" href="https://seller.shopee.co.th/portal/sale/order" target="_blank">🛍️ Shopee</a>`
+          ? `<button class="btn-done">✅ แพคแล้ว</button><span class="packed-time">บันทึก ${packed[o.id]}</span>`
+          : o.stockStatus==='arrived'
+            ? `<button class="btn-pack" onclick="packOrder('${o.id}')">✅ แพคแล้ว</button>
+               <a class="btn-shopee" href="https://seller.shopee.co.th/portal/sale/order" target="_blank">🛍️ Shopee</a>`
+            : ['nostock','has-erp-no-tracking'].includes(o.stockStatus)
+              ? `${o.erpItem?.url?`<a class="btn-reorder" href="${o.erpItem.url}" target="_blank">🛒 สั่งซื้อเพิ่ม</a>`:''}
+                 <button class="btn-edit" onclick="openTrack('${o.id}')">📦 ใส่ Tracking</button>`
+              : `<button class="btn-shopee" onclick="openTrack('${o.id}')">📦 ใส่ Tracking</button>`
         }
         <button class="btn-edit" onclick="openEdit('${o.id}')">✏️ แก้ไข</button>
       </div>
@@ -324,34 +703,20 @@ function renderOrders() {
   }).join('');
 }
 
-function updateStats(all) {
-  const pend = all.filter(o=>!packed[o.id]);
-  const packedL = all.filter(o=>packed[o.id]);
-  const urgent = pend.filter(o=>o.days<=3);
-  const rev = pend.reduce((a,o)=>a+o.sellPrice,0);
-  const prof = pend.reduce((a,o)=>a+o.profit,0);
-  document.getElementById('badge-pending').textContent = pend.length;
-  document.getElementById('badge-packed').textContent = packedL.length;
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat"><div class="stat-label">รอจัดส่ง</div><div class="stat-value" style="color:#D0011B">${pend.length}</div><div class="stat-sub">orders</div></div>
-    <div class="stat"><div class="stat-label">⚠️ เร่งด่วน</div><div class="stat-value" style="color:#EF4444">${urgent.length}</div><div class="stat-sub">≤3 วัน</div></div>
-    <div class="stat"><div class="stat-label">💰 รายรับรอรับ</div><div class="stat-value" style="color:#D0011B;font-size:17px">฿${rev.toLocaleString()}</div><div class="stat-sub">ยังไม่ได้ส่ง</div></div>
-    <div class="stat"><div class="stat-label">📈 กำไรรวม</div><div class="stat-value" style="color:#10B981;font-size:17px">฿${prof.toLocaleString()}</div><div class="stat-sub">ประมาณการ</div></div>
-    <div class="stat"><div class="stat-label">✅ แพคแล้ว</div><div class="stat-value" style="color:#10B981">${packedL.length}</div><div class="stat-sub">วันนี้</div></div>
-  `;
-}
-
+// ============================================================
+// ACTIONS
+// ============================================================
 function packOrder(id) {
   packed[id] = new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
-  localStorage.setItem('alinda_packed_v3', JSON.stringify(packed));
-  renderOrders();
+  localStorage.setItem('a_packed_v5', JSON.stringify(packed));
+  render();
 }
 
 function setTab(tab, el) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  renderOrders();
+  render();
 }
 
 function openEdit(id) {
@@ -359,12 +724,13 @@ function openEdit(id) {
   const o = all.find(x=>x.id===id);
   if (!o) return;
   editingId = id;
-  document.getElementById('edit-id').value = id;
-  document.getElementById('edit-product').value = o.product;
-  document.getElementById('edit-tracking').value = o.tracking||'';
-  document.getElementById('edit-cost').value = o.costPU||'';
-  document.getElementById('edit-price').value = o.sellPrice||'';
-  document.getElementById('edit-vr-status').value = o.vrStatus||'';
+  document.getElementById('e-id').value = id;
+  document.getElementById('e-prod').value = o.product;
+  document.getElementById('e-track').value = o.tracking||'';
+  document.getElementById('e-cost').value = o.costTHB||'';
+  document.getElementById('e-price').value = o.sellPrice||'';
+  document.getElementById('e-cargo').value = o.cargoType||'vr';
+  document.getElementById('e-note').value = o.ov.note||'';
   document.getElementById('editModal').classList.add('open');
 }
 
@@ -376,23 +742,50 @@ function closeEdit() {
 function saveEdit() {
   if (!editingId) return;
   overrides[editingId] = {
-    product: document.getElementById('edit-product').value,
-    tracking: document.getElementById('edit-tracking').value,
-    cost: document.getElementById('edit-cost').value,
-    price: document.getElementById('edit-price').value,
-    vrStatus: document.getElementById('edit-vr-status').value,
+    product: document.getElementById('e-prod').value,
+    tracking: document.getElementById('e-track').value,
+    cost: document.getElementById('e-cost').value,
+    price: document.getElementById('e-price').value,
+    cargo: document.getElementById('e-cargo').value,
+    note: document.getElementById('e-note').value,
   };
-  localStorage.setItem('alinda_ov_v3', JSON.stringify(overrides));
+  localStorage.setItem('a_ov_v5', JSON.stringify(overrides));
   closeEdit();
-  renderOrders();
+  render();
 }
 
-function init() {
-  document.getElementById('syncTime').textContent = `synced ${new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;
-  renderOrders();
+function openTrack(id) {
+  trackingForId = id;
+  document.getElementById('t-track').value = '';
+  document.getElementById('t-cargo').value = 'vr';
+  document.getElementById('trackModal').classList.add('open');
 }
 
-init();
+function closeTrack() {
+  document.getElementById('trackModal').classList.remove('open');
+  trackingForId = null;
+}
+
+function saveTracking() {
+  if (!trackingForId) return;
+  const tracking = document.getElementById('t-track').value.trim();
+  const cargo = document.getElementById('t-cargo').value;
+  if (!tracking) { alert('กรุณาใส่ tracking number'); return; }
+  trackOverrides[trackingForId] = { tracking, cargo };
+  localStorage.setItem('a_track_v5', JSON.stringify(trackOverrides));
+  closeTrack();
+  render();
+  if (cargo === 'vr') {
+    if (confirm('บันทึก tracking แล้ว!\nต้องการ Sync VR Cargo เพื่อเช็คสถานะตอนนี้เลยไหมคะ?')) {
+      syncVR();
+    }
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadERP();
 </script>
 </body>
 </html>
