@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alinda — Fulfillment Center</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter','Helvetica Neue',sans-serif; background: #F0F2F5; min-height: 100vh; }
+.header { background: #D0011B; padding: 0 20px; height: 54px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(208,1,27,0.3); }
+.header-logo { color: #fff; font-weight: 900; font-size: 16px; }
+.header-sep { color: rgba(255,255,255,0.4); }
+.header-title { color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600; }
+.header-spacer { flex: 1; }
+.header-sync { color: rgba(255,255,255,0.6); font-size: 11px; }
+.btn-refresh { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
+.tabs { background: #fff; border-bottom: 1px solid #E8EAED; padding: 0 20px; display: flex; gap: 4px; }
+.tab { padding: 12px 18px; border: none; background: none; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; color: #6B7280; white-space: nowrap; }
+.tab.active { color: #D0011B; border-bottom-color: #D0011B; }
+.tab-badge { background: #D0011B; color: #fff; border-radius: 10px; padding: 1px 7px; font-size: 10px; margin-left: 5px; }
+.tab-badge.green { background: #10B981; }
+.content { padding: 16px 20px; max-width: 1200px; margin: 0 auto; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap: 12px; margin-bottom: 20px; }
+.stat { background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #E8EAED; }
+.stat-label { font-size: 11px; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+.stat-value { font-size: 22px; font-weight: 800; color: #111827; }
+.stat-sub { font-size: 11px; color: #9CA3AF; margin-top: 3px; }
+.search-bar { display: flex; gap: 8px; margin-bottom: 14px; }
+.search-input { flex: 1; padding: 9px 14px; border: 1px solid #E8EAED; border-radius: 10px; font-size: 13px; outline: none; }
+.search-input:focus { border-color: #D0011B; }
+.orders { display: flex; flex-direction: column; gap: 10px; }
+.order-card { background: #fff; border-radius: 14px; border: 1px solid #E8EAED; overflow: hidden; transition: box-shadow 0.15s; }
+.order-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.order-card.urgent { border-left: 4px solid #EF4444; }
+.order-card.normal { border-left: 4px solid #D0011B; }
+.order-card.packed-card { border-left: 4px solid #10B981; opacity: 0.75; }
+.order-top { padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+.order-icon { width: 42px; height: 42px; background: #FFF1F1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.order-main { flex: 1; min-width: 0; }
+.order-id { font-size: 12px; font-weight: 800; color: #D0011B; font-family: monospace; margin-bottom: 3px; }
+.order-product { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 5px; }
+.order-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.meta-item { font-size: 12px; color: #6B7280; }
+.meta-item strong { color: #374151; }
+.order-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+.order-price { font-size: 20px; font-weight: 800; color: #D0011B; }
+.profit-val { font-size: 13px; font-weight: 700; }
+.profit-pos { color: #10B981; }
+.profit-neg { color: #EF4444; }
+.dl-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.dl-urgent { background: #FEE2E2; color: #DC2626; }
+.dl-soon { background: #FEF3C7; color: #D97706; }
+.dl-ok { background: #D1FAE5; color: #065F46; }
+.match-badge { background: #EEF2FF; color: #4338CA; padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+.unmatched-badge { background: #FEF3C7; color: #D97706; padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+.section-pad { padding: 0 16px 10px; }
+.vr-box { border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.vr-arrived { background: #D1FAE5; }
+.vr-transit { background: #FEF3C7; }
+.vr-unknown { background: #F3F4F6; }
+.vr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.vr-dot-green { background: #10B981; }
+.vr-dot-yellow { background: #F59E0B; }
+.vr-dot-gray { background: #9CA3AF; }
+.vr-text { flex: 1; }
+.vr-text strong { display: block; font-weight: 700; color: #111827; }
+.vr-text span { color: #6B7280; }
+.btn-vr { background: #fff; border: 1px solid #D0011B; color: #D0011B; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+.cost-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; background: #F9FAFB; border-radius: 10px; padding: 10px 14px; font-size: 12px; }
+.ci-label { color: #9CA3AF; font-weight: 600; margin-bottom: 2px; }
+.ci-val { font-weight: 700; color: #111827; }
+.order-actions { padding: 10px 16px; border-top: 1px solid #F3F4F6; display: flex; gap: 8px; align-items: center; }
+.btn-pack { background: #D0011B; color: #fff; border: none; padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.btn-pack:hover { background: #B0001A; }
+.btn-packed-done { background: #10B981; color: #fff; border: none; padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: default; }
+.btn-shopee { background: #FFF1F1; color: #D0011B; border: 1px solid #FCA5A5; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.btn-edit { background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.packed-time { font-size: 11px; color: #10B981; font-weight: 600; margin-left: auto; }
+.lot-badge { background: #EEF2FF; color: #4338CA; padding: 1px 5px; border-radius: 4px; font-size: 10px; font-weight: 700; font-family: monospace; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: #fff; border-radius: 16px; padding: 24px; width: 90%; max-width: 480px; }
+.modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+.mf { margin-bottom: 14px; }
+.mf label { display: block; font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 5px; }
+.mf input { width: 100%; padding: 9px 12px; border: 1px solid #E8EAED; border-radius: 8px; font-size: 13px; outline: none; }
+.mf input:focus { border-color: #D0011B; }
+.modal-btns { display: flex; gap: 8px; margin-top: 20px; }
+.modal-save { background: #D0011B; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; flex: 1; }
+.modal-cancel { background: #F3F4F6; color: #374151; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.spinner { width: 40px; height: 40px; border: 3px solid #F3F4F6; border-top-color: #D0011B; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading { text-align: center; padding: 80px 20px; color: #9CA3AF; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">ALINDA</div>
+  <div class="header-sep">/</div>
+  <div class="header-title">📦 Fulfillment Center</div>
+  <div class="header-spacer"></div>
+  <div class="header-sync" id="syncTime"></div>
+  <button class="btn-refresh" onclick="init()">🔄 Refresh</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="setTab('pending',this)">🟠 รอจัดส่ง <span class="tab-badge" id="badge-pending">0</span></button>
+  <button class="tab" onclick="setTab('packed',this)">✅ แพคแล้ว <span class="tab-badge green" id="badge-packed">0</span></button>
+  <button class="tab" onclick="setTab('all',this)">📋 ทั้งหมด</button>
+</div>
+
+<div class="content">
+  <div class="stats" id="statsRow"></div>
+  <div class="search-bar">
+    <input class="search-input" id="searchInput" placeholder="🔍 ค้นหา Order ID / สินค้า / ลูกค้า..." oninput="renderOrders()">
+  </div>
+  <div class="orders" id="ordersList">
+    <div class="loading"><div class="spinner"></div><div>กำลังโหลด Shopee orders...</div></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>✏️ แก้ไขข้อมูล Order</h3>
+    <div class="mf"><label>Order ID</label><input id="edit-id" readonly style="background:#F9FAFB"></div>
+    <div class="mf"><label>ชื่อสินค้า (Product EN)</label><input id="edit-product" placeholder="เช่น Tuff Tray (Sensory) 1m"></div>
+    <div class="mf"><label>Tracking Number (VR Cargo)</label><input id="edit-tracking" placeholder="เช่น DPK301894878709"></div>
+    <div class="mf"><label>ต้นทุน/หน่วย (฿) รวมค่าขนส่ง VR</label><input id="edit-cost" type="number" placeholder="เช่น 3500"></div>
+    <div class="mf"><label>ราคาขาย Shopee (฿) ยอดรวม</label><input id="edit-price" type="number" placeholder="เช่น 11100"></div>
+    <div class="mf"><label>สถานะ VR (ถึงไทยแล้วหรือยัง)</label>
+      <input id="edit-vr-status" placeholder="เช่น ถึงไทย 26/06/2026 หรือ ยังไม่ถึง"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeEdit()">ยกเลิก</button>
+      <button class="modal-save" onclick="saveEdit()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRODUCT_MAP = [
+  { kw:['stall bar','wall bar','jungle gym'], p:'Stall Bar / Wall Bar', e:'🧱', cost:8500 },
+  { kw:['tuff tray','tray','sensory tray','ถาดกิจกรรม'], p:'Tuff Tray (Sensory) 1m', e:'🌊', cost:3200 },
+  { kw:['climbing wall','攀岩板','climbing panel'], p:'Climbing Wall Panel', e:'🧗', cost:4500 },
+  { kw:['climbing frame','indoor climbing','攀爬架'], p:'Indoor Climbing Frame', e:'🧗', cost:6500 },
+  { kw:['dome climber','dome'], p:'Dome Climber', e:'⛺', cost:3200 },
+  { kw:['balance board','balance beam','stepping stone','过河石'], p:'Balance Board', e:'⚖️', cost:1800 },
+  { kw:['nugget','play sofa'], p:'Nugget Play Sofa', e:'🛋️', cost:4500 },
+  { kw:['light table','reggio'], p:'Light Table (Reggio)', e:'💡', cost:2800 },
+  { kw:['storage','cabinet','toy shelf'], p:'Toy Storage Cabinet', e:'📦', cost:2200 },
+  { kw:['swing board','rubber swing'], p:'Rubber Swing Board', e:'🤸', cost:600 },
+  { kw:['slide','สไลเดอร์'], p:'Slide', e:'🛝', cost:2500 },
+  { kw:['overhead ladder','cloud ladder'], p:'Overhead Ladder', e:'🪜', cost:5500 },
+  { kw:['moon table','moon-shaped'], p:'Moon-shaped Table', e:'🌙', cost:1800 },
+  { kw:['hollow blocks'], p:'Large Hollow Blocks', e:'🏗️', cost:4500 },
+  { kw:['swing','秋千'], p:'Swing', e:'🤸', cost:800 },
+  { kw:['sand','sandpit','玩沙'], p:'Sand Play Equipment', e:'🏖️', cost:1500 },
+];
+
+const ERP_TRACKING = {
+  'Stall Bar / Wall Bar': 'DPK301896689290',
+  'Tuff Tray (Sensory) 1m': 'DPK301894878709',
+  'Sand Play Equipment': 'S71686184407',
+  'Indoor Climbing Frame': 'S71110885610',
+  'Rubber Swing Board': 'SF0221199293316',
+  'Balance Board': '982930588',
+  'Climbing Wall Panel': 'YT7598779814837',
+};
+
+const ORDERS_RAW = [
+  { id:'#260702M8CH0YYD', customer:'phanuwatphph', deadline:'2026-08-05', date:'2026-07-02', raw:'Alinda STALL BAR WALL BAR fitness pilates jungle gym', qty:1, price:32500, variant:'M' },
+  { id:'#260702KN4U3W22', customer:'deepakdang', deadline:'2026-07-16', date:'2026-07-02', raw:'Tuff tray ถาดกิจกรรม sensory play loose part early year kindergarten', qty:2, price:11100, variant:'Tray+stand 100cm' },
+  { id:'#260702KK6MSANQ', customer:'35593559bigblue', deadline:'2026-07-16', date:'2026-07-02', raw:'Balance Board Stepping Stones sensory training kids', qty:1, price:3200, variant:'' },
+  { id:'#260630E94AHAXJ', customer:'chaokha.kids', deadline:'2026-07-24', date:'2026-06-30', raw:'Indoor Climbing Frame multi-function wood foldable', qty:1, price:8900, variant:'' },
+  { id:'#260629BUPXCKYJ', customer:'preeyapornsaw', deadline:'2026-07-23', date:'2026-06-29', raw:'Tuff tray sensory tray 100cm kindergarten', qty:1, price:5550, variant:'' },
+  { id:'#26062895WWCYUR', customer:'natyongvongphaiboon', deadline:'2026-07-04', date:'2026-06-28', raw:'Rubber Swing Board silicon indoor outdoor kids', qty:1, price:1290, variant:'' },
+  { id:'#2606288TWH39R4', customer:'ito_onz', deadline:'2026-08-01', date:'2026-06-27', raw:'Alinda STALL BAR WALL BAR wall mount bar training', qty:1, price:32500, variant:'L' },
+  { id:'#2606264RFYK3VS', customer:'pantakanrimkeeree', deadline:'2026-07-10', date:'2026-06-26', raw:'Dome climber outdoor indoor balance training 10FT', qty:1, price:4500, variant:'10FT' },
+  { id:'#260622QTB3NU1X', customer:'daungvan', deadline:'2026-07-08', date:'2026-06-22', raw:'Tuff tray sensory tray 1m black', qty:2, price:11100, variant:'' },
+  { id:'#260618DNFKS4UN', customer:'puiifaii44', deadline:'2026-07-07', date:'2026-06-18', raw:'Toy Storage Cabinet bookshelf wood kids', qty:1, price:3800, variant:'' },
+  { id:'#260617AC327ED0', customer:'sevener07', deadline:'2026-07-03', date:'2026-06-17', raw:'Climbing Wall Panel wood indoor gym', qty:1, price:6500, variant:'' },
+  { id:'#2606169DVW14H1', customer:'soungpichate', deadline:'2026-07-02', date:'2026-06-16', raw:'Balance board stepping stones sensory play', qty:1, price:2800, variant:'' },
+];
+
+let packed = JSON.parse(localStorage.getItem('alinda_packed_v3')||'{}');
+let overrides = JSON.parse(localStorage.getItem('alinda_ov_v3')||'{}');
+let currentTab = 'pending';
+let editingId = null;
+const TODAY = '2026-07-02';
+
+function matchProduct(raw) {
+  const t = raw.toLowerCase();
+  for (const m of PRODUCT_MAP) {
+    if (m.kw.some(k => t.includes(k.toLowerCase()))) return m;
+  }
+  return { p: raw.slice(0,40), e:'📦', cost:0, unmatched:true };
+}
+
+function daysDiff(deadline) {
+  return Math.ceil((new Date(deadline) - new Date(TODAY)) / 86400000);
+}
+
+function dlBadge(days, dl) {
+  const d = new Date(dl).toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+  if (days < 0) return `<span class="dl-badge dl-urgent">⚠️ เกิน ${Math.abs(days)} วัน</span>`;
+  if (days <= 3) return `<span class="dl-badge dl-urgent">🔴 ${d} (${days}วัน)</span>`;
+  if (days <= 7) return `<span class="dl-badge dl-soon">🟡 ${d} (${days}วัน)</span>`;
+  return `<span class="dl-badge dl-ok">🟢 ${d} (${days}วัน)</span>`;
+}
+
+function processAll() {
+  return ORDERS_RAW.map(o => {
+    const ov = overrides[o.id] || {};
+    const m = matchProduct(ov.raw || o.raw);
+    const product = ov.product || m.p;
+    const emoji = m.e || '📦';
+    const isMatched = !m.unmatched;
+    const tracking = ov.tracking || ERP_TRACKING[product] || '';
+    const costPU = ov.cost ? parseFloat(ov.cost) : (m.cost || 0);
+    const sellPrice = ov.price ? parseFloat(ov.price) : (o.price || 0);
+    const totalCost = costPU * o.qty;
+    const profit = sellPrice - totalCost;
+    const margin = sellPrice > 0 ? Math.round((profit/sellPrice)*100) : 0;
+    const vrStatus = ov.vrStatus || '';
+    const vrArrived = vrStatus && vrStatus.includes('ถึงไทย');
+    const days = daysDiff(o.deadline);
+    return { ...o, product, emoji, isMatched, tracking, costPU, sellPrice, totalCost, profit, margin, vrStatus, vrArrived, days };
+  });
+}
+
+function vrBlock(o) {
+  if (!o.tracking) return `
+    <div class="section-pad"><div class="vr-box vr-unknown">
+      <div class="vr-dot vr-dot-gray"></div>
+      <div class="vr-text"><strong>ไม่มี Tracking Number</strong><span>กด ✏️ แก้ไข เพื่อใส่ tracking จาก ERP</span></div>
+    </div></div>`;
+
+  if (o.vrArrived) return `
+    <div class="section-pad"><div class="vr-box vr-arrived">
+      <div class="vr-dot vr-dot-green"></div>
+      <div class="vr-text"><strong>✅ ถึงไทยแล้ว</strong><span>${o.vrStatus}</span></div>
+    </div></div>`;
+
+  if (o.vrStatus && !o.vrArrived) return `
+    <div class="section-pad"><div class="vr-box vr-transit">
+      <div class="vr-dot vr-dot-yellow"></div>
+      <div class="vr-text"><strong>⏳ ${o.vrStatus}</strong><span>Tracking: ${o.tracking}</span></div>
+      <a class="btn-vr" href="https://portal.vr-cargo.com/tracking" target="_blank">🔍 VR Portal</a>
+    </div></div>`;
+
+  return `
+    <div class="section-pad"><div class="vr-box vr-unknown">
+      <div class="vr-dot vr-dot-gray"></div>
+      <div class="vr-text"><strong>${o.tracking}</strong><span>ยังไม่ได้เช็คสถานะ — กด เช็ค VR แล้วอัปเดตใน ✏️ แก้ไข</span></div>
+      <a class="btn-vr" href="https://portal.vr-cargo.com/tracking" target="_blank">🔍 เช็ค VR</a>
+    </div></div>`;
+}
+
+function costBlock(o) {
+  if (!o.costPU) return '';
+  return `
+    <div class="section-pad"><div class="cost-grid">
+      <div><div class="ci-label">ต้นทุน/หน่วย</div><div class="ci-val">฿${o.costPU.toLocaleString()}</div></div>
+      <div><div class="ci-label">ต้นทุนรวม</div><div class="ci-val">฿${o.totalCost.toLocaleString()}</div></div>
+      <div><div class="ci-label">กำไร</div><div class="ci-val ${o.profit>=0?'profit-pos':'profit-neg'}">฿${o.profit.toLocaleString()}</div></div>
+      <div><div class="ci-label">Margin</div><div class="ci-val ${o.profit>=0?'profit-pos':'profit-neg'}">${o.margin}%</div></div>
+    </div></div>`;
+}
+
+function renderOrders() {
+  const all = processAll();
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = all.filter(o => {
+    const ip = !!packed[o.id];
+    if (currentTab==='pending' && ip) return false;
+    if (currentTab==='packed' && !ip) return false;
+    if (q && !o.id.toLowerCase().includes(q) && !o.product.toLowerCase().includes(q) && !o.customer.toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b) => {
+    const ap=!!packed[a.id],bp=!!packed[b.id];
+    if(ap!==bp) return ap?1:-1;
+    return a.days - b.days;
+  });
+
+  updateStats(all);
+
+  if (!filtered.length) {
+    document.getElementById('ordersList').innerHTML = `<div style="text-align:center;padding:60px 20px"><div style="font-size:40px;margin-bottom:12px">${currentTab==='packed'?'📋':'🎉'}</div><div style="font-size:15px;font-weight:700;color:#374151">${currentTab==='packed'?'ยังไม่มีที่แพคแล้ว':'ทุก order แพคหมดแล้ว!'}</div></div>`;
+    return;
+  }
+
+  document.getElementById('ordersList').innerHTML = filtered.map(o => {
+    const ip = !!packed[o.id];
+    const cls = ip ? 'packed-card' : (o.days<=3 ? 'urgent' : 'normal');
+    return `<div class="order-card ${cls}">
+      <div class="order-top">
+        <div class="order-icon">${o.emoji}</div>
+        <div class="order-main">
+          <div class="order-id">${o.id}</div>
+          <div class="order-product">${o.product}<span class="${o.isMatched?'match-badge':'unmatched-badge'}">${o.isMatched?'✓ matched':'? unmatched'}</span></div>
+          <div class="order-meta">
+            <span class="meta-item">👤 <strong>${o.customer}</strong></span>
+            <span class="meta-item">Qty ${o.qty}</span>
+            ${o.variant?`<span class="meta-item">📌 ${o.variant}</span>`:''}
+            ${dlBadge(o.days, o.deadline)}
+          </div>
+        </div>
+        <div class="order-right">
+          <div class="order-price">฿${o.sellPrice.toLocaleString()}</div>
+          ${o.costPU?`<div class="profit-val ${o.profit>=0?'profit-pos':'profit-neg'}">กำไร ${o.margin}%</div>`:''}
+        </div>
+      </div>
+      ${vrBlock(o)}
+      ${costBlock(o)}
+      <div class="order-actions">
+        ${ip
+          ? `<button class="btn-packed-done">✅ แพคแล้ว</button><span class="packed-time">บันทึก ${packed[o.id]}</span>`
+          : `<button class="btn-pack" onclick="packOrder('${o.id}')">✅ แพคแล้ว</button>
+             <a class="btn-shopee" href="https://seller.shopee.co.th/portal/sale/order" target="_blank">🛍️ Shopee</a>`
+        }
+        <button class="btn-edit" onclick="openEdit('${o.id}')">✏️ แก้ไข</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats(all) {
+  const pend = all.filter(o=>!packed[o.id]);
+  const packedL = all.filter(o=>packed[o.id]);
+  const urgent = pend.filter(o=>o.days<=3);
+  const rev = pend.reduce((a,o)=>a+o.sellPrice,0);
+  const prof = pend.reduce((a,o)=>a+o.profit,0);
+  document.getElementById('badge-pending').textContent = pend.length;
+  document.getElementById('badge-packed').textContent = packedL.length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><div class="stat-label">รอจัดส่ง</div><div class="stat-value" style="color:#D0011B">${pend.length}</div><div class="stat-sub">orders</div></div>
+    <div class="stat"><div class="stat-label">⚠️ เร่งด่วน</div><div class="stat-value" style="color:#EF4444">${urgent.length}</div><div class="stat-sub">≤3 วัน</div></div>
+    <div class="stat"><div class="stat-label">💰 รายรับรอรับ</div><div class="stat-value" style="color:#D0011B;font-size:17px">฿${rev.toLocaleString()}</div><div class="stat-sub">ยังไม่ได้ส่ง</div></div>
+    <div class="stat"><div class="stat-label">📈 กำไรรวม</div><div class="stat-value" style="color:#10B981;font-size:17px">฿${prof.toLocaleString()}</div><div class="stat-sub">ประมาณการ</div></div>
+    <div class="stat"><div class="stat-label">✅ แพคแล้ว</div><div class="stat-value" style="color:#10B981">${packedL.length}</div><div class="stat-sub">วันนี้</div></div>
+  `;
+}
+
+function packOrder(id) {
+  packed[id] = new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+  localStorage.setItem('alinda_packed_v3', JSON.stringify(packed));
+  renderOrders();
+}
+
+function setTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderOrders();
+}
+
+function openEdit(id) {
+  const all = processAll();
+  const o = all.find(x=>x.id===id);
+  if (!o) return;
+  editingId = id;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-product').value = o.product;
+  document.getElementById('edit-tracking').value = o.tracking||'';
+  document.getElementById('edit-cost').value = o.costPU||'';
+  document.getElementById('edit-price').value = o.sellPrice||'';
+  document.getElementById('edit-vr-status').value = o.vrStatus||'';
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeEdit() {
+  document.getElementById('editModal').classList.remove('open');
+  editingId = null;
+}
+
+function saveEdit() {
+  if (!editingId) return;
+  overrides[editingId] = {
+    product: document.getElementById('edit-product').value,
+    tracking: document.getElementById('edit-tracking').value,
+    cost: document.getElementById('edit-cost').value,
+    price: document.getElementById('edit-price').value,
+    vrStatus: document.getElementById('edit-vr-status').value,
+  };
+  localStorage.setItem('alinda_ov_v3', JSON.stringify(overrides));
+  closeEdit();
+  renderOrders();
+}
+
+function init() {
+  document.getElementById('syncTime').textContent = `synced ${new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;
+  renderOrders();
+}
+
+init();
+</script>
+</body>
+</html>
